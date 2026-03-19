@@ -18,16 +18,22 @@
 
 \section{Introduction}
 
-Diffusion flux follows:
-\begin{equation}
-    J = -D \nabla C
-\end{equation}
-Einstein derived relativity \parencite{einstein1905}.
+% Diffusion flux follows:
+% \begin{equation}
+%     J = -D \nabla C
+% \end{equation}
+% Einstein derived relativity \parencite{einstein1905}.
 
-\section{Simulation Method}
+\section{Simulation Method} \label{sec:method}
 
-In this study, we employ an off-lattice kinetic Monte Carlo (KMC) model to predict the diffusion and oxidation behavior of materials. The KMC model allows us to simulate the stochastic processes of atomic diffusion and chemical reactions at the atomic scale, providing insights into the mechanisms driving these phenomena. We consider the interactions between atoms and the effects of temperature and concentration gradients on diffusion rates. The model is calibrated using experimental data and validated against known diffusion coefficients and oxidation rates.    
+In this study, an off-lattice kinetic Monte Carlo (olKMC) model is employed to simulate radiation-induced segregation (RIS) and grain boundary oxidation in 304 stainless steel (304 SS). The simulation framework consists of two main parts: elemental diffusion and grain boundary oxidation. In the following subsections, the modeling approach for RIS and the treatment of oxidation processes are described separately. 
 
+\subsection{Radiation Induced Segregation} \label{sec:ris}
+
+To phenomenologically capture RIS, we empoly an effective chemical potential that accounts for the preferential enrichment or depletion of alloying elements to grain boundaries under irradiation. The alloy elements diffuse under the influence of this chemical potential can be described by chemical-potential-based diffusion flux equation:
+\begin{equation}\label{equ:1}
+J_i = -\frac{D_i C_i}{k_B T}\,\frac{\partial \left(\mu_0 + \Delta \mu_i(x)\right)}{\partial x}
+\end{equation} 
 
 \printbibliography
 
