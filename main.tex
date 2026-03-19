@@ -11,7 +11,8 @@
 \title{304 SS RIS and Oxidation Prediction by Off-Lattice KMC Model}
 \author{Zhuo Wang}
 \date{\today}
-
+% \setlength{\parindent}{0pt}
+% \setlength{\parskip}{0.8em}
 \begin{document}
 
 \maketitle
@@ -30,11 +31,27 @@ In this study, an off-lattice kinetic Monte Carlo (olKMC) model is employed to s
 
 \subsection{Radiation Induced Segregation} \label{sec:ris}
 
-To phenomenologically capture RIS, we empoly an effective chemical potential that accounts for the preferential enrichment or depletion of alloying elements to grain boundaries under irradiation. The alloy elements diffuse under the influence of this chemical potential can be described by chemical-potential-based diffusion flux equation:
-\begin{equation}\label{equ:1}
+To phenomenologically capture RIS, we empoly an effective chemical potential that accounts for the preferential enrichment or depletion of alloying elements to grain boundaries under irradiation. The diffusion flux of alloying species driven by the chemical potential gradient is expressed as
+\begin{equation}\label{equ:fickwithmiu}
 J_i = -\frac{D_i C_i}{k_B T}\,\frac{\partial \left(\mu_0 + \Delta \mu_i(x)\right)}{\partial x}
-\end{equation} 
+\end{equation}
+where \(J_i\) is the diffusion flux of species \(i\), \(D_i\) is the diffusion coefficient, \(C_i\) is the concentration, \(k_B\) is the Boltzmann constant, \(T\) is the absolute temperature, \(\mu_0\) is the reference chemical potential, and \(\Delta \mu_i(x)\) is the radiation-induced effective chemical potential contribution.
 
+The fluxes satisfy the mass-balance constraint
+\begin{equation}\label{equ:massbalance}
+\sum_i J_i + J_V = 0
+\end{equation}
+where \(J_V\) is the vacancy flux, given by Fick's first law:
+\begin{equation}\label{equ:vacfick}
+J_V = -D_V \frac{\partial C_V}{\partial x}
+\end{equation}
+with \(D_V\) and \(C_V\) denoting the vacancy diffusion coefficient and vacancy concentration, respectively.
+
+For irradiated 304 stainless steel (304 SS), vacancies are continuously generated in the grain interior, whereas the grain boundary serves as a strong vacancy sink. Accordingly, the vacancy concentration profile near the grain boundary is described by
+\begin{equation}\label{equ:vacconcprof}
+C_V(x) = C_V^{\infty}(\mathrm{dose}) - \left(C_V^{\infty}(\mathrm{dose}) - C_V^{\mathrm{GB}}\right)\exp(-kx)
+\end{equation}
+where \(x\) is the distance from the grain boundary, \(C_V^{\infty}(\mathrm{dose})\) is the bulk vacancy concentration at a given irradiation dose, \(C_V^{\mathrm{GB}}\) is the vacancy concentration at the grain boundary, and \(k\) is the decay constant. In the present work, \(C_V^{\mathrm{GB}} = 0\) is assumed.
 \printbibliography
 
 \end{document}
