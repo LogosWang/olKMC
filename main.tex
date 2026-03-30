@@ -75,22 +75,47 @@ where \(\Delta \mu_i^{\mathrm{GB}}\) is the effective chemical potential contrib
 \begin{equation}\label{equ:muCrNigb}
 \Delta \mu_i^{\mathrm{GB}} = \Delta \mu_0^{\mathrm{GB}} \ln \frac{D_i}{D_{Fe}} 
 \end{equation}
-where \(D_{Fe}\) is the diffusion coefficient of Fe, and \(\Delta \mu_0^{\mathrm{GB}}\) is a fitting parameter that represents the overall magnitude of the effective chemical potential contribution at the grain boundary. \(D_{Cr}>D_{Fe}>D_{Ni}\), therefore \(\Delta \mu_{Cr}^{\mathrm{GB}}>0\) and \(\Delta \mu_{Ni}^{\mathrm{GB}}<0\), which captures the enrichment of Cr and depletion of Ni at the grain boundary under irradiation. For Si, the segregation is mainly contributed by forming solute-interstitial complexes. The effective chemical potential contribution for Si is given by:
-\begin{equation}\label{equ:muSigt}
-\Delta \mu_{Si}^{\mathrm{GB}} = \Delta \mu_0^{\mathrm{GB}} \ln \frac{C_{SiI}}{C_{Si}} 
+where \(D_{Fe}\) is the diffusion coefficient of Fe, and \(\Delta \mu_0^{\mathrm{GB}}\) is a fitting parameter that represents the overall magnitude of the effective chemical potential at the grain boundary. \(D_{Cr}>D_{Fe}>D_{Ni}\), therefore \(\Delta \mu_{Cr}^{\mathrm{GB}}>0\) and \(\Delta \mu_{Ni}^{\mathrm{GB}}<0\), which captures the depletion of Cr and enrichment of Ni at the grain boundary under irradiation. For Si, the segregation behavior is treated separately, because in addition to the vacancy-mediated inverse Kirkendall effect, Si can also migrate through the formation of solute-interstitial complexes. To account for this additional mechanism, the effective chemical potential contribution of Si is decomposed into a vacancy-related part and an interstitial-related part:
+\begin{equation}\label{equ:muSiDecomp}
+\Delta \mu_{Si}(x) = \Delta \mu_{Si}^{V}(x) + \Delta \mu_{Si}^{I}(x)
 \end{equation}
-where \(C_{SiI}\) is the concentration of Si-interstitial complexes, which is assumed to be proportional to the interstitial concentration \(C_I\) and the Si concentration \(C_{Si}\):
-\begin{equation}\label{equ:SiIconc}
-C_{SiI} = K C_I C_{Si}
+where \(\Delta \mu_{Si}^{V}(x)\) denotes the vacancy-mediated contribution and \(\Delta \mu_{Si}^{I}(x)\) denotes the contribution associated with solute-interstitial complexes.
+
+The vacancy-mediated contribution is assumed to follow the same functional form as that of substitutional alloying elements:
+\begin{equation}\label{equ:muSiV}
+\Delta \mu_{Si}^{V}(x) = \Delta \mu_{Si}^{V,\mathrm{GB}} \exp\left(-\frac{x}{\lambda_V}\right)
 \end{equation}
-where \(K\) is the equilibrium constant for the formation of Si-interstitial complexes. The interstitial concentration profile is assumed to follow a similar form as the vacancy concentration profile:
-\begin{equation}\label{equ:interconcprof}
-C_I(x) = C_I^{\infty}(\mathrm{dose}) - \left(C_I^{\infty}(\mathrm{dose}) - C_I^{\mathrm{GB}}\right)\exp(-k'x)     
+where \(\Delta \mu_{Si}^{V,\mathrm{GB}}\) is the vacancy-mediated effective chemical potential of Si at the grain boundary and \(\lambda_V\) is the corresponding characteristic length scale.
+
+The contribution from solute-interstitial complexes is expressed as
+\begin{equation}\label{equ:muSiI}
+\Delta \mu_{Si}^{I}(x) = \Delta \mu_{Si}^{I,\mathrm{GB}} \exp\left(-\frac{x}{\lambda_I}\right)
 \end{equation}
-where \(C_I^{\infty}(\mathrm{dose})\) is the bulk interstitial concentration at a given irradiation dose, \(C_I^{\mathrm{GB}}\) is the interstitial concentration at the grain boundary, and \(k'\) is the decay constant. In the present work, \(C_I^{\mathrm{GB}} = 0\) is assumed. Thus the interstitial concentration profile can be expressed as:
-\begin{equation}\label{equ:interconcprof2}
-C_I(x) = C_I^{\infty}(\mathrm{dose}) \left(1 - \exp(-k'x)\right)    
+where \(\Delta \mu_{Si}^{I,\mathrm{GB}}\) is the effective chemical potential contribution at the grain boundary associated with interstitial-complex transport, and \(\lambda_I\) is the characteristic decay length of this contribution.
+
+Accordingly, the total effective chemical potential for Si becomes
+\begin{equation}\label{equ:muSiTotal}
+\Delta \mu_{Si}(x)
+=
+\Delta \mu_{Si}^{V,\mathrm{GB}} \exp\left(-\frac{x}{\lambda_V}\right)
++
+\Delta \mu_{Si}^{I,\mathrm{GB}} \exp\left(-\frac{x}{\lambda_I}\right)
 \end{equation}
-By substituting Eq. \ref{equ:interconcprof2} into Eq. \ref{equ:muSigt}, the effective chemical potential contribution for Si can be expressed as:
+
+In the present model, the interstitial-complex contribution is assumed to dominate the RIS behavior of Si, i.e.,
+\begin{equation}\label{equ:SiDominant}
+\left|\Delta \mu_{Si}^{I,\mathrm{GB}}\right| >
+\left|\Delta \mu_{Si}^{V,\mathrm{GB}}\right|
+\end{equation}
+so that the net driving force reproduces the experimentally observed segregation tendency of Si at grain boundaries under irradiation. For simplicity, if \(\lambda_V\) and \(\lambda_I\) are taken to be identical, Eq. \ref{equ:muSiTotal} can be rewritten as
+\begin{equation}\label{equ:muSiSimplified}
+\Delta \mu_{Si}(x)
+=
+\left(
+\Delta \mu_{Si}^{V,\mathrm{GB}} + \Delta \mu_{Si}^{I,\mathrm{GB}}
+\right)
+\exp\left(-\frac{x}{\lambda}\right)
+\end{equation}
+where the combined grain-boundary effective chemical potential term is fitted to yield the correct Si segregation behavior.
 \printbibliography
 \end{document}
