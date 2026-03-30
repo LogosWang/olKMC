@@ -51,7 +51,46 @@ For irradiated 304 stainless steel (304 SS), vacancies are continuously generate
 \begin{equation}\label{equ:vacconcprof}
 C_V(x) = C_V^{\infty}(\mathrm{dose}) - \left(C_V^{\infty}(\mathrm{dose}) - C_V^{\mathrm{GB}}\right)\exp(-kx)
 \end{equation}
-where \(x\) is the distance from the grain boundary, \(C_V^{\infty}(\mathrm{dose})\) is the bulk vacancy concentration at a given irradiation dose, \(C_V^{\mathrm{GB}}\) is the vacancy concentration at the grain boundary, and \(k\) is the decay constant. In the present work, \(C_V^{\mathrm{GB}} = 0\) is assumed.
+where \(x\) is the distance from the grain boundary, \(C_V^{\infty}(\mathrm{dose})\) is the bulk vacancy concentration at a given irradiation dose, \(C_V^{\mathrm{GB}}\) is the vacancy concentration at the grain boundary, and \(k\) is the decay constant. In the present work, \(C_V^{\mathrm{GB}} = 0\) is assumed. Thus the vacancy flux is within the form
+\begin{equation}\label{equ:vacflux}
+J_V = -k D_V C_V^{\infty}(\mathrm{dose}) \exp(-kx)
+\end{equation}
+The mass-balance constraint (Eq. \ref{equ:massbalance}) can be rewritten as:
+\begin{equation}\label{equ:massbalance2}
+\sum_i J_i = k D_V C_V^{\infty}(\mathrm{dose}) \exp(-kx)
+\end{equation}
+By intergrating the two sides of \ref{equ:massbalance2}, the mass-balance constraint for RIS effective chemical potential can be expressed as:
+\begin{equation} \label {equ:rischem}
+\sum_i D_i C_i \Delta \mu_i(x) = K_B T D_V C_V^{\infty}(\mathrm{dose}) \exp(-kx) + Const
+\end{equation}
+We assume that the effective chemical potential is zero at infinite distance from the grain boundary, thus the constant term in Eq. \ref{equ:rischem} is zero. The effective chemical potential constraint by mass balance can be expressed as :
+\begin{equation} \label{equ:risfinal}
+\sum_i D_i C_i \Delta \mu_i(x) = K_B T D_V C_V^{\infty}(\mathrm{dose}) \exp(-kx)
+\end{equation}
+The effective chemical potential contribution for each alloying element is assumed to follow an exponential decay form:
+\begin{equation}\label{equ:chemipot}
+\Delta \mu_i(x) = \Delta \mu_i^{\mathrm{GB}} \exp\left(-\frac{x}{\lambda}\right)
+\end{equation}
+where \(\Delta \mu_i^{\mathrm{GB}}\) is the effective chemical potential contribution at the grain boundary, and \(\lambda\) is the characteristic length scale. For 304 SS,  the  segregation of Ni and Cr are mainly contributed by Inverse Kirkendall effect, \(\Delta \mu_i^{\mathrm{GB}}\) is given by:
+\begin{equation}\label{equ:muCrNigb}
+\Delta \mu_i^{\mathrm{GB}} = \Delta \mu_0^{\mathrm{GB}} \ln \frac{D_i}{D_{Fe}} 
+\end{equation}
+where \(D_{Fe}\) is the diffusion coefficient of Fe, and \(\Delta \mu_0^{\mathrm{GB}}\) is a fitting parameter that represents the overall magnitude of the effective chemical potential contribution at the grain boundary. \(D_{Cr}>D_{Fe}>D_{Ni}\), therefore \(\Delta \mu_{Cr}^{\mathrm{GB}}>0\) and \(\Delta \mu_{Ni}^{\mathrm{GB}}<0\), which captures the enrichment of Cr and depletion of Ni at the grain boundary under irradiation. For Si, the segregation is mainly contributed by forming solute-interstitial complexes. The effective chemical potential contribution for Si is given by:
+\begin{equation}\label{equ:muSigt}
+\Delta \mu_{Si}^{\mathrm{GB}} = \Delta \mu_0^{\mathrm{GB}} \ln \frac{C_{SiI}}{C_{Si}} 
+\end{equation}
+where \(C_{SiI}\) is the concentration of Si-interstitial complexes, which is assumed to be proportional to the interstitial concentration \(C_I\) and the Si concentration \(C_{Si}\):
+\begin{equation}\label{equ:SiIconc}
+C_{SiI} = K C_I C_{Si}
+\end{equation}
+where \(K\) is the equilibrium constant for the formation of Si-interstitial complexes. The interstitial concentration profile is assumed to follow a similar form as the vacancy concentration profile:
+\begin{equation}\label{equ:interconcprof}
+C_I(x) = C_I^{\infty}(\mathrm{dose}) - \left(C_I^{\infty}(\mathrm{dose}) - C_I^{\mathrm{GB}}\right)\exp(-k'x)     
+\end{equation}
+where \(C_I^{\infty}(\mathrm{dose})\) is the bulk interstitial concentration at a given irradiation dose, \(C_I^{\mathrm{GB}}\) is the interstitial concentration at the grain boundary, and \(k'\) is the decay constant. In the present work, \(C_I^{\mathrm{GB}} = 0\) is assumed. Thus the interstitial concentration profile can be expressed as:
+\begin{equation}\label{equ:interconcprof2}
+C_I(x) = C_I^{\infty}(\mathrm{dose}) \left(1 - \exp(-k'x)\right)    
+\end{equation}
+By substituting Eq. \ref{equ:interconcprof2} into Eq. \ref{equ:muSigt}, the effective chemical potential contribution for Si can be expressed as:
 \printbibliography
-
 \end{document}
