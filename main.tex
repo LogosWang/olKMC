@@ -27,11 +27,76 @@
 
 \section{Simulation Method} \label{sec:method}
 
-In this study, an off-lattice kinetic Monte Carlo (olKMC) model is employed to simulate radiation-induced segregation (RIS) and grain boundary oxidation in 304 stainless steel (304 SS). The simulation framework consists of two main parts: elemental diffusion and grain boundary oxidation. In the following subsections, the modeling approach for RIS and the treatment of oxidation processes are described separately. 
+In this study, an off-lattice kinetic Monte Carlo (olKMC) model is employed to simulate radiation-induced segregation (RIS) and grain boundary oxidation in 304 stainless steel (304 SS). The simulation framework consists of two main components: stress- and irradiation-modulated elemental diffusion, and grain boundary oxidation driven by oxygen adsorption and in-plane diffusion. In the following subsections, the model geometry and species are first introduced, followed by the KMC algorithm, the RIS driving force, and the oxidation kinetics.
+
+\subsection{Model Overview} \label{sec:overview}
+
+The simulation domain is a three-dimensional cubic box of edge length $L = 1\,\mathrm{mm}$, representing the grain interior of a polycrystalline 304 stainless steel specimen. A planar grain boundary (GB) is embedded in the domain, defined by the equation
+\begin{equation}\label{equ:gbplane}
+Ax + By + Cz + D = 0
+\end{equation}
+where the coefficients $(A,\,B,\,C,\,D)$ control the orientation and position of the GB. Periodic boundary conditions are applied in the direction parallel to the GB plane for oxygen diffusion, while metal atoms are reflected at the box boundaries.
+
+Four particle species are tracked throughout the simulation, as summarised in Table~\ref{tab:species}.
+
+\begin{table}[h]
+\centering
+\caption{Particle species in the simulation.}
+\label{tab:species}
+\begin{tabular}{llp{7cm}}
+\hline
+Species & Type & Role \\
+\hline
+Si & solute & diffuses in grain interior; segregates to GB under irradiation \\
+Cr & solute & diffuses in grain interior; segregates to GB under irradiation \\
+Ni & solute & diffuses in grain interior; segregates to GB under irradiation \\
+O  & oxygen & adsorbs at the GB surface line and diffuses within the GB plane \\
+\hline
+\end{tabular}
+\end{table}
+
+Initial positions of Si, Cr, and Ni atoms are loaded from a pre-generated configuration file that represents a realistic grain microstructure. A static stress field $\sigma(\mathbf{r})$, obtained from external finite-element calculations, is interpolated to each atomic position at runtime. All simulations are performed at $T = 673\,\mathrm{K}$ ($400\,{}^{\circ}\mathrm{C}$), representative of light water reactor operating conditions.
+
+\subsection{KMC Algorithm and Hop Rate} \label{sec:kmc}
+
+The simulation follows the Bortz--Kalos--Lebowitz (BKL) variant of the kinetic Monte Carlo algorithm. At each step, a list of all possible events is maintained together with their rates (propensities). The total rate is
+\begin{equation}\label{equ:totalrate}
+R = \sum_{j} r_j
+\end{equation}
+where the sum runs over all events $j$ in the current event pool. The physical time increment associated with each KMC step is drawn from an exponential distribution:
+\begin{equation}\label{equ:timestep}
+\Delta t = -\frac{\ln u_1}{R}, \qquad u_1 \sim \mathcal{U}(0,1)
+\end{equation}
+An event $k$ is then selected with probability $r_k / R$ by drawing a second uniform random number $u_2$ and finding the index $k$ such that
+\begin{equation}\label{equ:eventselect}
+\sum_{j < k} r_j \;<\; u_2 R \;\leq\; \sum_{j \leq k} r_j
+\end{equation}
+After executing event $k$, all propensities are recalculated and the procedure repeats.
+
+\paragraph{Event types.}
+The event pool contains five types of events: random-walk diffusion of Si, Cr, and Ni atoms (\texttt{SILI\_DIFF}, \texttt{CROM\_DIFF}, \texttt{NIK\_DIFF}); oxygen adsorption at the GB surface line (\texttt{OXYGEN\_ABS}); and in-plane oxygen diffusion within the GB (\texttt{OXYGEN\_DIFF}). Stochastic oxidation is evaluated after each diffusion event, as described in Section~\ref{sec:oxidation}.  % TODO: add oxidation section
+
+\paragraph{Metal-atom hop rate.}
+Each metal-atom diffusion event is governed by a stress- and irradiation-modified Arrhenius rate:
+\begin{equation}\label{equ:hoprate}
+r_i = \nu_0 \exp\!\left(-\frac{\Delta E + \mathrm{tr}(\boldsymbol{\sigma})\,\Omega - \Delta\mu_i(x)}{k_B T}\right) \times s(d_\mathrm{GB})^{-2}
+\end{equation}
+where $\nu_0 = 10^{13}\,\mathrm{s}^{-1}$ is the attempt frequency, $\Delta E = 1.0\,\mathrm{eV}$ is the migration barrier, $\mathrm{tr}(\boldsymbol{\sigma})$ is the local hydrostatic stress trace interpolated from the external stress field, $\Omega = 10^{-28}\,\mathrm{m}^3$ is the activation volume, and $\Delta\mu_i(x)$ is the irradiation-induced effective chemical potential described in Section~\ref{sec:ris}. The factor $s(d_\mathrm{GB})^{-2}$ accounts for spatially adaptive resolution, as described below.
+
+\paragraph{Adaptive spatial resolution.}
+To resolve the steep concentration gradients near the GB while keeping the bulk computationally tractable, the jump distance and hop rate are jointly scaled by a position-dependent scalar $s(d_\mathrm{GB})$, defined via a sigmoid function of the distance $d_\mathrm{GB}$ to the grain boundary:
+\begin{equation}\label{equ:scalar}
+s(d_\mathrm{GB}) = 10^{\displaystyle\frac{-1}{1+\exp\!\left(\dfrac{d_\mathrm{GB} - d_0}{\ell}\right)}}
+\end{equation}
+where $d_0 = 30\,\mu\mathrm{m}$ is the crossover distance and $\ell$ is the length scale of the transition. The scalar ranges from $s = 0.1$ at the GB to $s = 1$ far away. The actual jump distance and propensity used at each step are
+\begin{equation}\label{equ:adaptivejump}
+\delta_\mathrm{actual} = \delta_0\, s, \qquad r_\mathrm{actual} = r_0\, s^{-2}
+\end{equation}
+where $\delta_0$ and $r_0$ are the base jump distance and rate, respectively. Because diffusivity $D \propto r\,\delta^2$, the product $r_\mathrm{actual}\,\delta_\mathrm{actual}^2 = r_0\,\delta_0^2$ is preserved, ensuring that the physical diffusivity is unchanged across the domain while the GB region is sampled at up to $10\times$ finer spatial resolution.
 
 \subsection{Radiation Induced Segregation} \label{sec:ris}
 
-To phenomenologically capture RIS, we empoly an effective chemical potential that accounts for the preferential enrichment or depletion of alloying elements to grain boundaries under irradiation. The diffusion flux of alloying species driven by the chemical potential gradient is expressed as
+To phenomenologically capture RIS, we employ an effective chemical potential that accounts for the preferential enrichment or depletion of alloying elements to grain boundaries under irradiation. The diffusion flux of alloying species driven by the chemical potential gradient is expressed as
 \begin{equation}\label{equ:fickwithmiu}
 J_i = -\frac{D_i C_i}{k_B T}\,\frac{\partial \left(\mu_0 + \Delta \mu_i(x)\right)}{\partial x}
 \end{equation}
